@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giser Game Shop - Магазин для Matreshka RP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Цветовая схема: красный, серый, черный */
+        :root {
+            --primary-red: #c62828;
+            --dark-red: #8e0000;
+            --light-red: #ff5252;
+            --light-gray: #e0e0e0;
+            --medium-gray: #757575;
+            --dark-gray: #424242;
+            --black: #1a1a1a;
+            --card-bg: rgba(45, 26, 26, 0.7);
+        }
+
+        /* Стили для аутентификации */
+        .auth-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 26, 26, 0.95) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .auth-form {
+            background-color: var(--black);
+            padding: 2.5rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(198, 40, 40, 0.3);
+            border: 1px solid var(--primary-red);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-red), var(--light-red));
+        }
+
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--light-gray);
+            font-size: 1.8rem;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 1.2rem;
+            background-color: rgba(66, 66, 66, 0.7);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--light-gray);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.3);
+        }
+
+        .auth-form button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 1.2rem;
+            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.4);
+        }
+
+        .auth-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(198, 40, 40, 0.5);
+        }
+
+        .google-auth {
+            background: linear-gradient(135deg, #4285f4, #34a853) !important;
+            box-shadow: 0 4px 10px rgba(66, 133, 244, 0.4) !important;
+        }
+
+        .google-auth:hover {
+            box-shadow: 0 6px 15px rgba(66, 133, 244, 0.5) !important;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--medium-gray);
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--medium-gray);
+        }
+
+        .auth-divider span {
+            padding: 0 1rem;
+        }
+
+        /* Анимация логотипа */
+        .logo-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--black) 0%, #2d1a1a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            animation: fadeOut 1.5s ease-in-out 2.5s forwards;
+        }
+
+        .logo-container {
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--primary-red);
+            text-shadow: 0 0 20px rgba(198, 40, 40, 0.7);
+            animation: pulse 2s infinite, glow 3s infinite alternate;
+            margin-bottom: 1rem;
+        }
+
+        .logo-subtitle {
+            color: var(--light-gray);
+            font-size: 1.2rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 1.5s forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(198, 40, 40, 0.7); }
+            to { text-shadow: 0 0 30px rgba(255, 82, 82, 0.9), 0 0 40px rgba(198, 40, 40, 0.5); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* Основной контент */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            flex: 1;
+            padding-bottom: 80px; /* Для нижнего меню */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 2px solid var(--primary-red);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .site-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-red);
+            text-shadow: 0 0 10px rgba(198, 40, 40, 0.5);
+        }
+
+        .logo-icon {
+            font-size: 2.2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 2px solid var(--light-gray);
+            box-shadow: 0 0 10px rgba(198, 40, 40, 0.5);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Меню категорий */
+        .category-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--medium-gray);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-red), var(--light-red));
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary-red);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-red);
+        }
+
+        .category-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--light-gray);
+            font-size: 1.5rem;
+        }
+
+        .category-card p {
+            color: var(--medium-gray);
+        }
+
+        .category-card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .category-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: var(--medium-gray);
+        }
+
+        /* Рынок */
+        .market-section {
+            display: none;
+        }
+
+        .market-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--primary-red);
+        }
+
+        .sell-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.4);
+        }
+
+        .sell-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(198, 40, 40, 0.5);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .item-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--medium-gray);
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-red);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 200px;
+            background-color: var(--black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .item-card:hover .item-image img {
+            transform: scale(1.05);
+        }
+
+        .item-details {
+            padding: 1.5rem;
+        }
+
+        .item-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--light-gray);
+            font-size: 1.2rem;
+        }
+
+        .item-price {
+            color: var(--primary-red);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .item-seller {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: color 0.3s;
+        }
+
+        .favorite-btn.active {
+            color: var(--primary-red);
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid var(--primary-red);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--primary-red);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--light-gray);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--primary-red);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light-gray);
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(66, 66, 66, 0.7);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            color: var(--light-gray);
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .cancel-btn {
+            background-color: var(--dark-gray);
+            color: var(--light-gray);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background-color: var(--medium-gray);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(198, 40, 40, 0.5);
+        }
+
+        /* Нижнее меню */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--card-bg);
+            border-top: 2px solid var(--primary-red);
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0;
+            z-index: 100;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--medium-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            padding: 0.5rem;
+            border-radius: 10px;
+            min-width: 70px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-red);
+            background: rgba(198, 40, 40, 0.1);
+        }
+
+        .nav-item i {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .nav-item:hover {
+            color: var(--light-gray);
+            transform: translateY(-3px);
+        }
+
+        /* Админские функции */
+        .admin-controls {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(198, 40, 40, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--primary-red);
+        }
+
+        .admin-controls h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-red);
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 0.8rem;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(198, 40, 40, 0.4);
+        }
+
+        /* Профиль */
+        .profile-section {
+            display: none;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 15px;
+            border: 1px solid var(--primary-red);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-red), var(--light-red));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 3px solid var(--light-gray);
+            box-shadow: 0 0 20px rgba(198, 40, 40, 0.5);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info h2 {
+            color: var(--light-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: var(--medium-gray);
+        }
+
+        .profile-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        /* Избранное */
+        .favorites-section {
+            display: none;
+        }
+
+        /* Детали товара */
+        .item-detail-modal {
+            display: none;
+        }
+
+        .item-detail-content {
+            max-width: 800px;
+            padding: 0;
+        }
+
+        .item-detail-header {
+            position: relative;
+        }
+
+        .item-detail-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .item-detail-info {
+            padding: 2rem;
+        }
+
+        .item-detail-title {
+            font-size: 1.8rem;
+            color: var(--light-gray);
+            margin-bottom: 1rem;
+        }
+
+        .item-detail-price {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .item-detail-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meta-item {
+            background: rgba(66, 66, 66, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .meta-label {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-value {
+            color: var(--light-gray);
+            font-weight: 500;
+        }
+
+        .seller-info {
+            background: rgba(198, 40, 40, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            border: 1px solid var(--primary-red);
+        }
+
+        .seller-info h3 {
+            color: var(--primary-red);
+            margin-bottom: 1rem;
+        }
+
+        .seller-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Сообщение о пустом рынке */
+        .empty-market {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--medium-gray);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .category-menu {
+                grid-template-columns: 1fr;
+            }
+            
+            .items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            
+            .market-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .admin-controls {
+                text-align: center;
+            }
+            
+            .item-detail-meta {
+                grid-template-columns: 1fr;
+            }
+            
+            .seller-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Прелоадер для изображений */
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            background-color: var(--dark-gray);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимация логотипа -->
+    <div class="logo-animation">
+        <div class="logo-container">
+            <div class="logo">Giser Company</div>
+            <div class="logo-subtitle">Gamer Market - Магазин для Matreshka RP</div>
+        </div>
+    </div>
+
+    <!-- Форма аутентификации -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-form">
+            <h2>Вход в Gamer Market</h2>
+            <input type="text" id="username" placeholder="Email">
+            <input type="password" id="password" placeholder="Пароль">
+            <button id="loginBtn">Войти</button>
+            
+            <div class="auth-divider">
+                <span>или</span>
+            </div>
+            
+            <button class="google-auth" id="googleLoginBtn">
+                <i class="fab fa-google"></i> Войти через Google
+            </button>
+            
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--medium-gray);">
+                Нет аккаунта? <a href="#" style="color: var(--primary-red);" id="registerLink">Зарегистрироваться</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <header>
+            <div class="site-logo">
+                <div class="logo-icon">🎮</div>
+                <div>Giser Game Shop</div>
+            </div>
+        </header>
+
+        <!-- Админские функции (только для админа) -->
+        <div class="admin-controls" id="adminControls">
+            <h3>Админ-панель</h3>
+            <button class="admin-btn" id="deleteItemBtn">Удалить товар</button>
+            <button class="admin-btn" id="banUserBtn">Забанить пользователя</button>
+            <button class="admin-btn" id="viewReportsBtn">Просмотреть жалобы</button>
+            <button class="admin-btn" id="manageUsersBtn">Управление пользователями</button>
+        </div>
+
+        <!-- Главная страница с категориями -->
+        <div class="category-menu" id="mainMenu">
+            <div class="category-card" data-category="money">
+                <div class="category-icon">💸</div>
+                <h3>Купить/продать вирты</h3>
+                <p>Покупка и продажа игровой валюты</p>
+            </div>
+            <div class="category-card" data-category="items">
+                <div class="category-icon">🎒</div>
+                <h3>Купить/продать вещи</h3>
+                <p>Торговля игровыми предметами</p>
+            </div>
+            <div class="category-card" data-category="vehicles">
+                <div class="category-icon">🚗</div>
+                <h3>Купить/продать т/с</h3>
+                <p>Автомобили и транспортные средства</p>
+            </div>
+        </div>
+
+        <!-- Рынок виртов (недоступен) -->
+        <div class="market-section" id="moneyMarket">
+            <div class="market-header">
+                <h2>Покупка/продажа виртов</h2>
+            </div>
+            <div class="empty-market">
+                <div class="empty-icon">💸</div>
+                <h3>Данный пункт не доступен</h3>
+                <p>Скоро откроем</p>
+            </div>
+        </div>
+
+        <!-- Рынок вещей -->
+        <div class="market-section" id="itemsMarket">
+            <div class="market-header">
+                <h2>Покупка/продажа вещей</h2>
+                <button class="sell-btn" id="sellItemBtn">Продать вещь</button>
+            </div>
+            <div class="items-grid" id="itemsGrid">
+                <!-- Товары будут добавляться динамически -->
+            </div>
+        </div>
+
+        <!-- Рынок транспортных средств -->
+        <div class="market-section" id="vehiclesMarket">
+            <div class="market-header">
+                <h2>Покупка/продажа т/с</h2>
+                <button class="sell-btn" id="sellVehicleBtn">Продать машину</button>
+            </div>
+            <div class="items-grid" id="vehiclesGrid">
+                <!-- Товары будут добавляться динамически -->
+            </div>
+        </div>
+
+        <!-- Профиль пользователя -->
+        <div class="profile-section" id="profileSection">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    <span>U</span>
+                </div>
+                <div class="profile-info">
+                    <h2 id="profileName">Пользователь</h2>
+                    <p id="profileDescription">Описание профиля</p>
+                </div>
+            </div>
+            
+            <div class="profile-form">
+                <div class="form-group">
+                    <label for="editNickname">Никнейм</label>
+                    <input type="text" id="editNickname" placeholder="Введите ваш никнейм">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTelegram">Телеграм</label>
+                    <input type="text" id="editTelegram" placeholder="@username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editGameNumber">Номер в игре</label>
+                    <input type="text" id="editGameNumber" placeholder="Ваш номер в Matreshka RP">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editDescription">Описание профиля</label>
+                    <textarea id="editDescription" placeholder="Расскажите о себе"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="avatarUpload">Загрузить аватар</label>
+                    <input type="file" id="avatarUpload" accept="image/*">
+                    <div class="image-preview" id="avatarPreview"></div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="submit-btn" id="saveProfileBtn">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Избранное -->
+        <div class="market-section" id="favoritesSection">
+            <div class="market-header">
+                <h2>Избранное</h2>
+            </div>
+            <div class="items-grid" id="favoritesGrid">
+                <!-- Избранные товары будут добавляться динамически -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для продажи вещи -->
+    <div class="modal" id="sellItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Продать вещь</h3>
+                <button class="close-btn" id="closeItemModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="itemNickname">Ник:</label>
+                <input type="text" id="itemNickname" placeholder="Ваш ник в игре">
+            </div>
+            <div class="form-group">
+                <label for="itemTelegram">Телеграм:</label>
+                <input type="text" id="itemTelegram" placeholder="@username">
+            </div>
+            <div class="form-group">
+                <label for="itemGameNumber">Номер в игре:</label>
+                <input type="text" id="itemGameNumber" placeholder="Ваш номер в игре">
+            </div>
+            <div class="form-group">
+                <label for="itemName">Название товара:</label>
+                <input type="text" id="itemName" placeholder="Название предмета">
+            </div>
+            <div class="form-group">
+                <label for="itemPrice">Цена:</label>
+                <input type="number" id="itemPrice" placeholder="Цена в рублях">
+            </div>
+            <div class="form-group">
+                <label for="itemBargain">Торг:</label>
+                <select id="itemBargain">
+                    <option value="yes">Да</option>
+                    <option value="no">Нет</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="itemPhoto">Фото предмета:</label>
+                <input type="file" id="itemPhoto" accept="image/*">
+                <div class="image-preview" id="itemPhotoPreview"></div>
+            </div>
+            <div class="form-actions">
+                <button class="cancel-btn" id="cancelItemBtn">Отмена</button>
+                <button class="submit-btn" id="submitItemBtn">Выставить на продажу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для продажи транспортного средства -->
+    <div class="modal" id="sellVehicleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Продать машину</h3>
+                <button class="close-btn" id="closeVehicleModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="vehicleNickname">Ник:</label>
+                <input type="text" id="vehicleNickname" placeholder="Ваш ник в игре">
+            </div>
+            <div class="form-group">
+                <label for="vehicleTelegram">Телеграм:</label>
+                <input type="text" id="vehicleTelegram" placeholder="@username">
+            </div>
+            <div class="form-group">
+                <label for="vehicleGameNumber">Номер в игре:</label>
+                <input type="text" id="vehicleGameNumber" placeholder="Ваш номер в игре">
+            </div>
+            <div class="form-group">
+                <label for="vehicleModel">Модель машины:</label>
+                <input type="text" id="vehicleModel" placeholder="Модель транспортного средства">
+            </div>
+            <div class="form-group">
+                <label for="vehiclePrice">Цена:</label>
+                <input type="number" id="vehiclePrice" placeholder="Цена в рублях">
+            </div>
+            <div class="form-group">
+                <label for="vehicleBargain">Торг:</label>
+                <select id="vehicleBargain">
+                    <option value="yes">Да</option>
+                    <option value="no">Нет</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vehiclePhoto">Загрузить фото тс:</label>
+                <input type="file" id="vehiclePhoto" accept="image/*">
+                <div class="image-preview" id="vehiclePhotoPreview"></div>
+            </div>
+            <div class="form-group">
+                <label for="vehiclePst">Фото ПСТ:</label>
+                <input type="file" id="vehiclePst" accept="image/*">
+                <div class="image-preview" id="vehiclePstPreview"></div>
+            </div>
+            <div class="form-actions">
+                <button class="cancel-btn" id="cancelVehicleBtn">Отмена</button>
+                <button class="submit-btn" id="submitVehicleBtn">Выставить на продажу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно деталей товара -->
+    <div class="modal item-detail-modal" id="itemDetailModal">
+        <div class="modal-content item-detail-content">
+            <div class="item-detail-header">
+                <img src="" alt="Товар" class="item-detail-image" id="detailImage">
+                <button class="close-btn" id="closeDetailModal" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">&times;</button>
+            </div>
+            <div class="item-detail-info">
+                <h2 class="item-detail-title" id="detailTitle"></h2>
+                <div class="item-detail-price" id="detailPrice"></div>
+                
+                <div class="item-detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Торг</div>
+                        <div class="meta-value" id="detailBargain"></div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Дата размещения</div>
+                        <div class="meta-value" id="detailDate"></div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Категория</div>
+                        <div class="meta-value" id="detailCategory"></div>
+                    </div>
+                </div>
+                
+                <div class="seller-info">
+                    <h3>Информация о продавце</h3>
+                    <div class="seller-details">
+                        <div class="meta-item">
+                            <div class="meta-label">Никнейм</div>
+                            <div class="meta-value" id="sellerNickname"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Телеграм</div>
+                            <div class="meta-value" id="sellerTelegram"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Номер в игре</div>
+                            <div class="meta-value" id="sellerGameNumber"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="cancel-btn" id="closeDetailBtn">Закрыть</button>
+                    <button class="submit-btn" id="contactSellerBtn">Связаться с продавцом</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижнее меню навигации -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active" data-page="main">
+            <i class="fas fa-home"></i>
+            <span>Главная</span>
+        </a>
+        <a href="#" class="nav-item" data-page="support">
+            <i class="fas fa-headset"></i>
+            <span>Тех поддержка</span>
+        </a>
+        <a href="#" class="nav-item" data-page="favorites">
+            <i class="fas fa-star"></i>
+            <span>Избранное</span>
+        </a>
+        <a href="#" class="nav-item" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>Профиль</span>
+        </a>
+    </div>
+
+    <script>
+        // Данные пользователя
+        let currentUser = null;
+        let isAdmin = false;
+        
+        // Данные товаров
+        let items = [];
+        let vehicles = [];
+        let favorites = [];
+        
+        // DOM элементы
+        const authContainer = document.getElementById('authContainer');
+        const mainContent = document.getElementById('mainContent');
+        const loginBtn = document.getElementById('loginBtn');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const registerLink = document.getElementById('registerLink');
+        const adminControls = document.getElementById('adminControls');
+        
+        // Элементы навигации
+        const mainMenu = document.getElementById('mainMenu');
+        const moneyMarket = document.getElementById('moneyMarket');
+        const itemsMarket = document.getElementById('itemsMarket');
+        const vehiclesMarket = document.getElementById('vehiclesMarket');
+        const profileSection = document.getElementById('profileSection');
+        const favoritesSection = document.getElementById('favoritesSection');
+        
+        // Кнопки продажи
+        const sellItemBtn = document.getElementById('sellItemBtn');
+        const sellVehicleBtn = document.getElementById('sellVehicleBtn');
+        
+        // Модальные окна
+        const sellItemModal = document.getElementById('sellItemModal');
+        const sellVehicleModal = document.getElementById('sellVehicleModal');
+        const itemDetailModal = document.getElementById('itemDetailModal');
+        
+        // Кнопки закрытия модальных окон
+        const closeItemModal = document.getElementById('closeItemModal');
+        const closeVehicleModal = document.getElementById('closeVehicleModal');
+        const closeDetailModal = document.getElementById('closeDetailModal');
+        const cancelItemBtn = document.getElementById('cancelItemBtn');
+        const cancelVehicleBtn = document.getElementById('cancelVehicleBtn');
+        const closeDetailBtn = document.getElementById('closeDetailBtn');
+        
+        // Кнопки отправки форм
+        const submitItemBtn = document.getElementById('submitItemBtn');
+        const submitVehicleBtn = document.getElementById('submitVehicleBtn');
+        const contactSellerBtn = document.getElementById('contactSellerBtn');
+        
+        // Элементы профиля
+        const profileName = document.getElementById('profileName');
+        const profileDescription = document.getElementById('profileDescription');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const editNickname = document.getElementById('editNickname');
+        const editTelegram = document.getElementById('editTelegram');
+        const editGameNumber = document.getElementById('editGameNumber');
+        const editDescription = document.getElementById('editDescription');
+        const avatarUpload = document.getElementById('avatarUpload');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        
+        // Элементы предпросмотра изображений
+        const itemPhotoPreview = document.getElementById('itemPhotoPreview');
+        const vehiclePhotoPreview = document.getElementById('vehiclePhotoPreview');
+        const vehiclePstPreview = document.getElementById('vehiclePstPreview');
+        
+        // Элементы деталей товара
+        const detailImage = document.getElementById('detailImage');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailPrice = document.getElementById('detailPrice');
+        const detailBargain = document.getElementById('detailBargain');
+        const detailDate = document.getElementById('detailDate');
+        const detailCategory = document.getElementById('detailCategory');
+        const sellerNickname = document.getElementById('sellerNickname');
+        const sellerTelegram = document.getElementById('sellerTelegram');
+        const sellerGameNumber = document.getElementById('sellerGameNumber');
+        
+        // Сетки товаров
+        const itemsGrid = document.getElementById('itemsGrid');
+        const vehiclesGrid = document.getElementById('vehiclesGrid');
+        const favoritesGrid = document.getElementById('favoritesGrid');
+        
+        // Навигация в нижнем меню
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Показываем анимацию логотипа на 2.5 секунды
+            setTimeout(() => {
+                // После анимации показываем форму входа
+                authContainer.style.display = 'flex';
+            }, 3500);
+            
+            // Назначаем обработчики событий
+            setupEventListeners();
+            
+            // Загружаем данные из localStorage
+            loadData();
+        });
+        
+        function setupEventListeners() {
+            // Обработчики для входа
+            loginBtn.addEventListener('click', handleLogin);
+            googleLoginBtn.addEventListener('click', handleGoogleLogin);
+            registerLink.addEventListener('click', handleRegister);
+            
+            // Обработчики для категорий
+            const categoryCards = document.querySelectorAll('.category-card');
+            categoryCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    if (category === 'money') {
+                        showSection(moneyMarket);
+                    } else if (category === 'items') {
+                        showSection(itemsMarket);
+                        renderItems();
+                    } else if (category === 'vehicles') {
+                        showSection(vehiclesMarket);
+                        renderVehicles();
+                    }
+                });
+            });
+            
+            // Обработчики для кнопок продажи
+            sellItemBtn.addEventListener('click', () => {
+                // Заполняем поля данными из профиля, если они есть
+                const userProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                document.getElementById('itemNickname').value = userProfile.nickname || '';
+                document.getElementById('itemTelegram').value = userProfile.telegram || '';
+                document.getElementById('itemGameNumber').value = userProfile.gameNumber || '';
+                
+                sellItemModal.style.display = 'flex';
+            });
+            
+            sellVehicleBtn.addEventListener('click', () => {
+                // Заполняем поля данными из профиля, если они есть
+                const userProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                document.getElementById('vehicleNickname').value = userProfile.nickname || '';
+                document.getElementById('vehicleTelegram').value = userProfile.telegram || '';
+                document.getElementById('vehicleGameNumber').value = userProfile.gameNumber || '';
+                
+                sellVehicleModal.style.display = 'flex';
+            });
+            
+            // Обработчики для закрытия модальных окон
+            closeItemModal.addEventListener('click', () => {
+                sellItemModal.style.display = 'none';
+            });
+            
+            closeVehicleModal.addEventListener('click', () => {
+                sellVehicleModal.style.display = 'none';
+            });
+            
+            closeDetailModal.addEventListener('click', () => {
+                itemDetailModal.style.display = 'none';
+            });
+            
+            cancelItemBtn.addEventListener('click', () => {
+                sellItemModal.style.display = 'none';
+            });
+            
+            cancelVehicleBtn.addEventListener('click', () => {
+                sellVehicleModal.style.display = 'none';
+            });
+            
+            closeDetailBtn.addEventListener('click', () => {
+                itemDetailModal.style.display = 'none';
+            });
+            
+            // Обработчики для отправки форм
+            submitItemBtn.addEventListener('click', addNewItem);
+            submitVehicleBtn.addEventListener('click', addNewVehicle);
+            contactSellerBtn.addEventListener('click', contactSeller);
+            
+            // Обработчик для сохранения профиля
+            saveProfileBtn.addEventListener('click', saveProfile);
+            
+            // Обработчики для загрузки изображений
+            avatarUpload.addEventListener('change', function(e) {
+                handleImageUpload(e, avatarPreview);
+            });
+            
+            document.getElementById('itemPhoto').addEventListener('change', function(e) {
+                handleImageUpload(e, itemPhotoPreview);
+            });
+            
+            document.getElementById('vehiclePhoto').addEventListener('change', function(e) {
+                handleImageUpload(e, vehiclePhotoPreview);
+            });
+            
+            document.getElementById('vehiclePst').addEventListener('change', function(e) {
+                handleImageUpload(e, vehiclePstPreview);
+            });
+            
+            // Обработчики для навигации
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    
+                    // Убираем активный класс у всех элементов
+                    navItems.forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    
+                    // Добавляем активный класс текущему элементу
+                    this.classList.add('active');
+                    
+                    // Показываем соответствующую секцию
+                    if (page === 'main') {
+                        showMainMenu();
+                    } else if (page === 'support') {
+                        window.open('https://t.me/Karma_0ke', '_blank');
+                        // Возвращаем активность на главную
+                        setTimeout(() => {
+                            navItems.forEach(navItem => {
+                                navItem.classList.remove('active');
+                                if (navItem.getAttribute('data-page') === 'main') {
+                                    navItem.classList.add('active');
+                                }
+                            });
+                        }, 100);
+                    } else if (page === 'favorites') {
+                        showSection(favoritesSection);
+                        renderFavorites();
+                    } else if (page === 'profile') {
+                        showSection(profileSection);
+                        loadProfileData();
+                    }
+                });
+            });
+        }
+        
+        function handleLogin() {
+            const email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (email && password) {
+                // Проверяем, является ли пользователь админом
+                if (email === 'zuzu666527@gmail.com' && password === 'zuzu0885') {
+                    currentUser = {
+                        username: 'Admin',
+                        email: email,
+                        isAdmin: true
+                    };
+                    isAdmin = true;
+                } else {
+                    // Для обычных пользователей
+                    currentUser = {
+                        username: email.split('@')[0],
+                        email: email,
+                        isAdmin: false
+                    };
+                    isAdmin = false;
+                }
+                
+                // Сохраняем данные пользователя
+                saveUserData();
+                
+                // Показываем основной контент
+                showMainContent();
+            } else {
+                alert('Пожалуйста, заполните все поля');
+            }
+        }
+        
+        function handleGoogleLogin() {
+            // В реальном приложении здесь была бы интеграция с Google OAuth
+            // Для демонстрации просто создаем случайного пользователя
+            const randomId = Math.floor(Math.random() * 10000);
+            currentUser = {
+                username: `user${randomId}`,
+                email: `user${randomId}@gmail.com`,
+                isAdmin: false
+            };
+            
+            isAdmin = false;
+            
+            // Сохраняем данные пользователя
+            saveUserData();
+            
+            // Показываем основной контент
+            showMainContent();
+        }
+        
+        function handleRegister() {
+            // В реальном приложении здесь была бы форма регистрации
+            alert('Функция регистрации временно недоступна. Используйте вход через Google');
+        }
+        
+        function showMainContent() {
+            authContainer.style.display = 'none';
+            mainContent.style.display = 'block';
+            
+            // Показываем админские функции, если пользователь админ
+            if (isAdmin) {
+                adminControls.style.display = 'block';
+            }
+            
+            // Показываем главное меню
+            showMainMenu();
+        }
+        
+        function showMainMenu() {
+            hideAllSections();
+            mainMenu.style.display = 'grid';
+            
+            // Обновляем активную кнопку в навигации
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-page') === 'main') {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        function showSection(section) {
+            hideAllSections();
+            section.style.display = 'block';
+        }
+        
+        function hideAllSections() {
+            const sections = [
+                mainMenu, 
+                moneyMarket, 
+                itemsMarket, 
+                vehiclesMarket, 
+                profileSection, 
+                favoritesSection
+            ];
+            
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+        
+        function addNewItem() {
+            const nickname = document.getElementById('itemNickname').value;
+            const telegram = document.getElementById('itemTelegram').value;
+            const gameNumber = document.getElementById('itemGameNumber').value;
+            const name = document.getElementById('itemName').value;
+            const price = document.getElementById('itemPrice').value;
+            const bargain = document.getElementById('itemBargain').value;
+            const photo = itemPhotoPreview.querySelector('img') ? itemPhotoPreview.querySelector('img').src : '';
+            
+            if (!nickname || !telegram || !gameNumber || !name || !price) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+            
+            const newItem = {
+                id: Date.now(),
+                nickname,
+                telegram,
+                gameNumber,
+                name,
+                price: parseInt(price),
+                bargain: bargain === 'yes',
+                date: new Date().toLocaleString('ru-RU'),
+                seller: currentUser.username,
+                photo: photo,
+                type: 'item'
+            };
+            
+            items.push(newItem);
+            saveItemsData();
+            renderItems();
+            
+            // Закрываем модальное окно и очищаем форму
+            sellItemModal.style.display = 'none';
+            document.getElementById('itemNickname').value = '';
+            document.getElementById('itemTelegram').value = '';
+            document.getElementById('itemGameNumber').value = '';
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('itemBargain').value = 'yes';
+            itemPhotoPreview.innerHTML = '';
+            
+            alert('Товар успешно выставлен на продажу!');
+        }
+        
+        function addNewVehicle() {
+            const nickname = document.getElementById('vehicleNickname').value;
+            const telegram = document.getElementById('vehicleTelegram').value;
+            const gameNumber = document.getElementById('vehicleGameNumber').value;
+            const model = document.getElementById('vehicleModel').value;
+            const price = document.getElementById('vehiclePrice').value;
+            const bargain = document.getElementById('vehicleBargain').value;
+            const photo = vehiclePhotoPreview.querySelector('img') ? vehiclePhotoPreview.querySelector('img').src : '';
+            const pstPhoto = vehiclePstPreview.querySelector('img') ? vehiclePstPreview.querySelector('img').src : '';
+            
+            if (!nickname || !telegram || !gameNumber || !model || !price) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+            
+            const newVehicle = {
+                id: Date.now(),
+                nickname,
+                telegram,
+                gameNumber,
+                model,
+                price: parseInt(price),
+                bargain: bargain === 'yes',
+                date: new Date().toLocaleString('ru-RU'),
+                seller: currentUser.username,
+                photo: photo,
+                pstPhoto: pstPhoto,
+                type: 'vehicle'
+            };
+            
+            vehicles.push(newVehicle);
+            saveVehiclesData();
+            renderVehicles();
+            
+            // Закрываем модальное окно и очищаем форму
+            sellVehicleModal.style.display = 'none';
+            document.getElementById('vehicleNickname').value = '';
+            document.getElementById('vehicleTelegram').value = '';
+            document.getElementById('vehicleGameNumber').value = '';
+            document.getElementById('vehicleModel').value = '';
+            document.getElementById('vehiclePrice').value = '';
+            document.getElementById('vehicleBargain').value = 'yes';
+            vehiclePhotoPreview.innerHTML = '';
+            vehiclePstPreview.innerHTML = '';
+            
+            alert('Транспортное средство успешно выставлено на продажу!');
+        }
+        
+        function renderItems() {
+            itemsGrid.innerHTML = '';
+            
+            if (items.length === 0) {
+                itemsGrid.innerHTML = '<div class="empty-market"><div class="empty-icon">🎒</div><h3>Рынок пуст</h3><p>Будьте первым, кто выставит товар на продажу!</p></div>';
+                return;
+            }
+            
+            items.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                itemCard.setAttribute('data-id', item.id);
+                itemCard.setAttribute('data-type', 'item');
+                
+                itemCard.innerHTML = `
+                    <div class="item-image">
+                        ${item.photo ? `<img src="${item.photo}" alt="${item.name}">` : '<span>🎒</span>'}
+                    </div>
+                    <div class="item-details">
+                        <div class="item-title">${item.name}</div>
+                        <div class="item-price">${item.price} руб.</div>
+                        <div class="item-meta">
+                            <span>Торг: ${item.bargain ? 'Да' : 'Нет'}</span>
+                            <span>${item.date}</span>
+                        </div>
+                        <div class="item-seller">
+                            <span>Продавец: ${item.nickname}</span>
+                            <button class="favorite-btn" data-id="${item.id}" data-type="item">${favorites.some(fav => fav.id === item.id && fav.type === 'item') ? '❤️' : '🤍'}</button>
+                        </div>
+                    </div>
+                `;
+                itemsGrid.appendChild(itemCard);
+            });
+            
+            // Добавляем обработчики для карточек товаров
+            document.querySelectorAll('.item-card[data-type="item"]').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('favorite-btn')) {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        showItemDetails(id, 'item');
+                    }
+                });
+            });
+            
+            // Добавляем обработчики для кнопок избранного
+            document.querySelectorAll('.favorite-btn[data-type="item"]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = parseInt(this.getAttribute('data-id'));
+                    toggleFavorite(id, 'item', this);
+                });
+            });
+        }
+        
+        function renderVehicles() {
+            vehiclesGrid.innerHTML = '';
+            
+            if (vehicles.length === 0) {
+                vehiclesGrid.innerHTML = '<div class="empty-market"><div class="empty-icon">🚗</div><h3>Рынок пуст</h3><p>Будьте первым, кто выставит транспортное средство на продажу!</p></div>';
+                return;
+            }
+            
+            vehicles.forEach(vehicle => {
+                const vehicleCard = document.createElement('div');
+                vehicleCard.className = 'item-card';
+                vehicleCard.setAttribute('data-id', vehicle.id);
+                vehicleCard.setAttribute('data-type', 'vehicle');
+                
+                vehicleCard.innerHTML = `
+                    <div class="item-image">
+                        ${vehicle.photo ? `<img src="${vehicle.photo}" alt="${vehicle.model}">` : '<span>🚗</span>'}
+                    </div>
+                    <div class="item-details">
+                        <div class="item-title">${vehicle.model}</div>
+                        <div class="item-price">${vehicle.price} руб.</div>
+                        <div class="item-meta">
+                            <span>Торг: ${vehicle.bargain ? 'Да' : 'Нет'}</span>
+                            <span>${vehicle.date}</span>
+                        </div>
+                        <div class="item-seller">
+                            <span>Продавец: ${vehicle.nickname}</span>
+                            <button class="favorite-btn" data-id="${vehicle.id}" data-type="vehicle">${favorites.some(fav => fav.id === vehicle.id && fav.type === 'vehicle') ? '❤️' : '🤍'}</button>
+                        </div>
+                    </div>
+                `;
+                vehiclesGrid.appendChild(vehicleCard);
+            });
+            
+            // Добавляем обработчики для карточек товаров
+            document.querySelectorAll('.item-card[data-type="vehicle"]').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('favorite-btn')) {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        showItemDetails(id, 'vehicle');
+                    }
+                });
+            });
+            
+            // Добавляем обработчики для кнопок избранного
+            document.querySelectorAll('.favorite-btn[data-type="vehicle"]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = parseInt(this.getAttribute('data-id'));
+                    toggleFavorite(id, 'vehicle', this);
+                });
+            });
+        }
+        
+        function showItemDetails(id, type) {
+            let item;
+            if (type === 'item') {
+                item = items.find(i => i.id === id);
+            } else {
+                item = vehicles.find(v => v.id === id);
+            }
+            
+            if (!item) return;
+            
+            // Заполняем модальное окно деталей
+            detailImage.src = item.photo || (type === 'item' ? '' : '');
+            detailImage.alt = type === 'item' ? item.name : item.model;
+            detailTitle.textContent = type === 'item' ? item.name : item.model;
+            detailPrice.textContent = `${item.price} руб.`;
+            detailBargain.textContent = item.bargain ? 'Да' : 'Нет';
+            detailDate.textContent = item.date;
+            detailCategory.textContent = type === 'item' ? 'Вещь' : 'Транспортное средство';
+            sellerNickname.textContent = item.nickname;
+            sellerTelegram.textContent = item.telegram;
+            sellerGameNumber.textContent = item.gameNumber;
+            
+            // Показываем модальное окно
+            itemDetailModal.style.display = 'flex';
+        }
+        
+        function contactSeller() {
+            const telegram = sellerTelegram.textContent;
+            if (telegram) {
+                window.open(`https://t.me/${telegram.replace('@', '')}`, '_blank');
+            } else {
+                alert('Телеграм продавца не указан');
+            }
+        }
+        
+        function renderFavorites() {
+            favoritesGrid.innerHTML = '';
+            
+            if (favorites.length === 0) {
+                favoritesGrid.innerHTML = '<div class="empty-market"><div class="empty-icon">⭐</div><h3>В избранном пусто</h3><p>Добавьте товары в избранное, чтобы видеть их здесь</p></div>';
+                return;
+            }
+            
+            favorites.forEach(fav => {
+                let item;
+                if (fav.type === 'item') {
+                    item = items.find(i => i.id === fav.id);
+                } else {
+                    item = vehicles.find(v => v.id === fav.id);
+                }
+                
+                if (!item) return;
+                
+                const favoriteCard = document.createElement('div');
+                favoriteCard.className = 'item-card';
+                favoriteCard.setAttribute('data-id', item.id);
+                favoriteCard.setAttribute('data-type', fav.type);
+                
+                favoriteCard.innerHTML = `
+                    <div class="item-image">
+                        ${item.photo ? `<img src="${item.photo}" alt="${fav.type === 'item' ? item.name : item.model}">` : `<span>${fav.type === 'item' ? '🎒' : '🚗'}</span>`}
+                    </div>
+                    <div class="item-details">
+                        <div class="item-title">${fav.type === 'item' ? item.name : item.model}</div>
+                        <div class="item-price">${item.price} руб.</div>
+                        <div class="item-meta">
+                            <span>Торг: ${item.bargain ? 'Да' : 'Нет'}</span>
+                            <span>${item.date}</span>
+                        </div>
+                        <div class="item-seller">
+                            <span>Продавец: ${item.nickname}</span>
+                            <button class="favorite-btn active" data-id="${item.id}" data-type="${fav.type}">❤️</button>
+                        </div>
+                    </div>
+                `;
+                favoritesGrid.appendChild(favoriteCard);
+            });
+            
+            // Добавляем обработчики для карточек товаров
+            document.querySelectorAll('.item-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('favorite-btn')) {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const type = this.getAttribute('data-type');
+                        showItemDetails(id, type);
+                    }
+                });
+            });
+            
+            // Добавляем обработчики для кнопок избранного
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const type = this.getAttribute('data-type');
+                    toggleFavorite(id, type, this);
+                    
+                    // Если мы в разделе избранного, перерисовываем список
+                    if (favoritesSection.style.display === 'block') {
+                        renderFavorites();
+                    }
+                });
+            });
+        }
+        
+        function toggleFavorite(id, type, button) {
+            const index = favorites.findIndex(fav => fav.id === id && fav.type === type);
+            
+            if (index === -1) {
+                // Добавляем в избранное
+                favorites.push({ id, type });
+                if (button) button.textContent = '❤️';
+                if (button) button.classList.add('active');
+            } else {
+                // Удаляем из избранного
+                favorites.splice(index, 1);
+                if (button) button.textContent = '🤍';
+                if (button) button.classList.remove('active');
+            }
+            
+            saveFavoritesData();
+        }
+        
+        function loadProfileData() {
+            const userData = JSON.parse(localStorage.getItem('userProfile')) || {};
+            
+            editNickname.value = userData.nickname || currentUser.username;
+            editTelegram.value = userData.telegram || '';
+            editGameNumber.value = userData.gameNumber || '';
+            editDescription.value = userData.description || '';
+            
+            profileName.textContent = userData.nickname || currentUser.username;
+            profileDescription.textContent = userData.description || 'Описание профиля';
+            
+            if (userData.avatar) {
+                profileAvatar.innerHTML = `<img src="${userData.avatar}" alt="Аватар">`;
+                avatarPreview.innerHTML = `<img src="${userData.avatar}" alt="Аватар">`;
+            } else {
+                profileAvatar.innerHTML = `<span>${currentUser.username.charAt(0).toUpperCase()}</span>`;
+                avatarPreview.innerHTML = '';
+            }
+        }
+        
+        function saveProfile() {
+            const userProfile = {
+                nickname: editNickname.value,
+                telegram: editTelegram.value,
+                gameNumber: editGameNumber.value,
+                description: editDescription.value,
+                avatar: localStorage.getItem('userAvatar') || ''
+            };
+            
+            localStorage.setItem('userProfile', JSON.stringify(userProfile));
+            
+            // Обновляем отображение профиля
+            profileName.textContent = userProfile.nickname;
+            profileDescription.textContent = userProfile.description;
+            
+            // Обновляем аватар, если он был загружен
+            if (userProfile.avatar) {
+                profileAvatar.innerHTML = `<img src="${userProfile.avatar}" alt="Аватар">`;
+            }
+            
+            alert('Профиль успешно сохранен!');
+        }
+        
+        function handleImageUpload(e, previewElement) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imageDataUrl = event.target.result;
+                    
+                    if (previewElement === avatarPreview) {
+                        localStorage.setItem('userAvatar', imageDataUrl);
+                    }
+                    
+                    previewElement.innerHTML = `<img src="${imageDataUrl}" alt="Preview">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // Функции для работы с localStorage
+        function saveUserData() {
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        
+        function saveItemsData() {
+            localStorage.setItem('marketItems', JSON.stringify(items));
+        }
+        
+        function saveVehiclesData() {
+            localStorage.setItem('marketVehicles', JSON.stringify(vehicles));
+        }
+        
+        function saveFavoritesData() {
+            localStorage.setItem('userFavorites', JSON.stringify(favorites));
+        }
+        
+        function loadData() {
+            // Загружаем данные пользователя
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                isAdmin = currentUser.email === 'zuzu666527@gmail.com';
+                showMainContent();
+            }
+            
+            // Загружаем товары
+            const savedItems = localStorage.getItem('marketItems');
+            if (savedItems) {
+                items = JSON.parse(savedItems);
+            }
+            
+            // Загружаем транспортные средства
+            const savedVehicles = localStorage.getItem('marketVehicles');
+            if (savedVehicles) {
+                vehicles = JSON.parse(savedVehicles);
+            }
+            
+            // Загружаем избранное
+            const savedFavorites = localStorage.getItem('userFavorites');
+            if (savedFavorites) {
+                favorites = JSON.parse(savedFavorites);
+            }
+        }
+    </script>
+</body>
+</html>
