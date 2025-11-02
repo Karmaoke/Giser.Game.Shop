@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giser Game Shop - Магазин для Matreshka RP</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Анимация логотипа -->
+    <div class="logo-animation">
+        <div class="logo-container">
+            <div class="logo">Giser Company</div>
+            <div class="logo-subtitle">Gamer Market - Магазин для Matreshka RP</div>
+        </div>
+    </div>
+
+    <!-- Форма аутентификации -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-form">
+            <h2>Вход в Gamer Market</h2>
+            <input type="text" id="username" placeholder="Email">
+            <input type="password" id="password" placeholder="Пароль">
+            <button id="loginBtn">Войти</button>
+            
+            <div class="auth-divider">
+                <span>или</span>
+            </div>
+            
+            <button class="google-auth" id="googleLoginBtn">
+                <i class="fab fa-google"></i> Войти через Google
+            </button>
+            
+            <p style="text-align: center; margin-top: 1.5rem; color: var(--medium-gray);">
+                Нет аккаунта? <a href="#" style="color: var(--primary-red);" id="registerLink">Зарегистрироваться</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container" id="mainContent" style="display: none;">
+        <header>
+            <div class="site-logo">
+                <div class="logo-icon">🎮</div>
+                <div>Giser Game Shop</div>
+            </div>
+        </header>
+
+        <!-- Админские функции (только для админа) -->
+        <div class="admin-controls" id="adminControls">
+            <h3>Админ-панель</h3>
+            <button class="admin-btn" id="deleteItemBtn">Удалить товар</button>
+            <button class="admin-btn" id="banUserBtn">Забанить пользователя</button>
+            <button class="admin-btn" id="viewReportsBtn">Просмотреть жалобы</button>
+            <button class="admin-btn" id="manageUsersBtn">Управление пользователями</button>
+        </div>
+
+        <!-- Главная страница с категориями -->
+        <div class="category-menu" id="mainMenu">
+            <div class="category-card" data-category="money">
+                <div class="category-icon">💸</div>
+                <h3>Купить/продать вирты</h3>
+                <p>Покупка и продажа игровой валюты</p>
+            </div>
+            <div class="category-card" data-category="items">
+                <div class="category-icon">🎒</div>
+                <h3>Купить/продать вещи</h3>
+                <p>Торговля игровыми предметами</p>
+            </div>
+            <div class="category-card" data-category="vehicles">
+                <div class="category-icon">🚗</div>
+                <h3>Купить/продать т/с</h3>
+                <p>Автомобили и транспортные средства</p>
+            </div>
+        </div>
+
+        <!-- Рынок виртов (недоступен) -->
+        <div class="market-section" id="moneyMarket">
+            <div class="market-header">
+                <h2>Покупка/продажа виртов</h2>
+            </div>
+            <div class="empty-market">
+                <div class="empty-icon">💸</div>
+                <h3>Данный пункт не доступен</h3>
+                <p>Скоро откроем</p>
+            </div>
+        </div>
+
+        <!-- Рынок вещей -->
+        <div class="market-section" id="itemsMarket">
+            <div class="market-header">
+                <h2>Покупка/продажа вещей</h2>
+                <button class="sell-btn" id="sellItemBtn">Продать вещь</button>
+            </div>
+            <div class="items-grid" id="itemsGrid">
+                <!-- Товары будут добавляться динамически -->
+            </div>
+        </div>
+
+        <!-- Рынок транспортных средств -->
+        <div class="market-section" id="vehiclesMarket">
+            <div class="market-header">
+                <h2>Покупка/продажа т/с</h2>
+                <button class="sell-btn" id="sellVehicleBtn">Продать машину</button>
+            </div>
+            <div class="items-grid" id="vehiclesGrid">
+                <!-- Товары будут добавляться динамически -->
+            </div>
+        </div>
+
+        <!-- Профиль пользователя -->
+        <div class="profile-section" id="profileSection">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">
+                    <span>U</span>
+                </div>
+                <div class="profile-info">
+                    <h2 id="profileName">Пользователь</h2>
+                    <p id="profileDescription">Описание профиля</p>
+                </div>
+            </div>
+            
+            <div class="profile-form">
+                <div class="form-group">
+                    <label for="editNickname">Никнейм</label>
+                    <input type="text" id="editNickname" placeholder="Введите ваш никнейм">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editTelegram">Телеграм</label>
+                    <input type="text" id="editTelegram" placeholder="@username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editGameNumber">Номер в игре</label>
+                    <input type="text" id="editGameNumber" placeholder="Ваш номер в Matreshka RP">
+                </div>
+                
+                <div class="form-group">
+                    <label for="editDescription">Описание профиля</label>
+                    <textarea id="editDescription" placeholder="Расскажите о себе"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="avatarUpload">Загрузить аватар</label>
+                    <input type="file" id="avatarUpload" accept="image/*">
+                    <div class="image-preview" id="avatarPreview"></div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="submit-btn" id="saveProfileBtn">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Избранное -->
+        <div class="market-section" id="favoritesSection">
+            <div class="market-header">
+                <h2>Избранное</h2>
+            </div>
+            <div class="items-grid" id="favoritesGrid">
+                <!-- Избранные товары будут добавляться динамически -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для продажи вещи -->
+    <div class="modal" id="sellItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Продать вещь</h3>
+                <button class="close-btn" id="closeItemModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="itemNickname">Ник:</label>
+                <input type="text" id="itemNickname" placeholder="Ваш ник в игре">
+            </div>
+            <div class="form-group">
+                <label for="itemTelegram">Телеграм:</label>
+                <input type="text" id="itemTelegram" placeholder="@username">
+            </div>
+            <div class="form-group">
+                <label for="itemGameNumber">Номер в игре:</label>
+                <input type="text" id="itemGameNumber" placeholder="Ваш номер в игре">
+            </div>
+            <div class="form-group">
+                <label for="itemName">Название товара:</label>
+                <input type="text" id="itemName" placeholder="Название предмета">
+            </div>
+            <div class="form-group">
+                <label for="itemPrice">Цена:</label>
+                <input type="number" id="itemPrice" placeholder="Цена в рублях">
+            </div>
+            <div class="form-group">
+                <label for="itemBargain">Торг:</label>
+                <select id="itemBargain">
+                    <option value="yes">Да</option>
+                    <option value="no">Нет</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="itemPhoto">Фото предмета:</label>
+                <input type="file" id="itemPhoto" accept="image/*">
+                <div class="image-preview" id="itemPhotoPreview"></div>
+            </div>
+            <div class="form-actions">
+                <button class="cancel-btn" id="cancelItemBtn">Отмена</button>
+                <button class="submit-btn" id="submitItemBtn">Выставить на продажу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для продажи транспортного средства -->
+    <div class="modal" id="sellVehicleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Продать машину</h3>
+                <button class="close-btn" id="closeVehicleModal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="vehicleNickname">Ник:</label>
+                <input type="text" id="vehicleNickname" placeholder="Ваш ник в игре">
+            </div>
+            <div class="form-group">
+                <label for="vehicleTelegram">Телеграм:</label>
+                <input type="text" id="vehicleTelegram" placeholder="@username">
+            </div>
+            <div class="form-group">
+                <label for="vehicleGameNumber">Номер в игре:</label>
+                <input type="text" id="vehicleGameNumber" placeholder="Ваш номер в игре">
+            </div>
+            <div class="form-group">
+                <label for="vehicleModel">Модель машины:</label>
+                <input type="text" id="vehicleModel" placeholder="Модель транспортного средства">
+            </div>
+            <div class="form-group">
+                <label for="vehiclePrice">Цена:</label>
+                <input type="number" id="vehiclePrice" placeholder="Цена в рублях">
+            </div>
+            <div class="form-group">
+                <label for="vehicleBargain">Торг:</label>
+                <select id="vehicleBargain">
+                    <option value="yes">Да</option>
+                    <option value="no">Нет</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vehiclePhoto">Загрузить фото тс:</label>
+                <input type="file" id="vehiclePhoto" accept="image/*">
+                <div class="image-preview" id="vehiclePhotoPreview"></div>
+            </div>
+            <div class="form-group">
+                <label for="vehiclePst">Фото ПСТ:</label>
+                <input type="file" id="vehiclePst" accept="image/*">
+                <div class="image-preview" id="vehiclePstPreview"></div>
+            </div>
+            <div class="form-actions">
+                <button class="cancel-btn" id="cancelVehicleBtn">Отмена</button>
+                <button class="submit-btn" id="submitVehicleBtn">Выставить на продажу</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно деталей товара -->
+    <div class="modal item-detail-modal" id="itemDetailModal">
+        <div class="modal-content item-detail-content">
+            <div class="item-detail-header">
+                <img src="" alt="Товар" class="item-detail-image" id="detailImage">
+                <button class="close-btn" id="closeDetailModal" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">&times;</button>
+            </div>
+            <div class="item-detail-info">
+                <h2 class="item-detail-title" id="detailTitle"></h2>
+                <div class="item-detail-price" id="detailPrice"></div>
+                
+                <div class="item-detail-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Торг</div>
+                        <div class="meta-value" id="detailBargain"></div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Дата размещения</div>
+                        <div class="meta-value" id="detailDate"></div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Категория</div>
+                        <div class="meta-value" id="detailCategory"></div>
+                    </div>
+                </div>
+                
+                <div class="seller-info">
+                    <h3>Информация о продавце</h3>
+                    <div class="seller-details">
+                        <div class="meta-item">
+                            <div class="meta-label">Никнейм</div>
+                            <div class="meta-value" id="sellerNickname"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Телеграм</div>
+                            <div class="meta-value" id="sellerTelegram"></div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-label">Номер в игре</div>
+                            <div class="meta-value" id="sellerGameNumber"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="cancel-btn" id="closeDetailBtn">Закрыть</button>
+                    <button class="submit-btn" id="contactSellerBtn">Связаться с продавцом</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижнее меню навигации -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active" data-page="main">
+            <i class="fas fa-home"></i>
+            <span>Главная</span>
+        </a>
+        <a href="#" class="nav-item" data-page="support">
+            <i class="fas fa-headset"></i>
+            <span>Тех поддержка</span>
+        </a>
+        <a href="#" class="nav-item" data-page="favorites">
+            <i class="fas fa-star"></i>
+            <span>Избранное</span>
+        </a>
+        <a href="#" class="nav-item" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>Профиль</span>
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
